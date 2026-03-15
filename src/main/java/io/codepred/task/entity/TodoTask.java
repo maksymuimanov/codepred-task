@@ -30,6 +30,13 @@ public class TodoTask {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    public TodoTask(String title,
+                    @Nullable String description,
+                    TodoStatus status,
+                    LocalDateTime createdAt) {
+        this(null, title, description, status, createdAt);
+    }
+
     @Override
     public final boolean equals(Object object) {
         if (this == object) return true;
