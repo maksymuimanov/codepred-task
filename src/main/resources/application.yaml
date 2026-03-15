@@ -1,7 +1,16 @@
 spring:
   application:
     name: codepred-task
+  config:
+    import: optional:file:.env[.properties]
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: validate
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://db:5432/${POSTGRES_DB}
