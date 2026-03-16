@@ -18,8 +18,8 @@ import org.springframework.web.context.WebApplicationContext;
 })
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TodoTaskApplicationE2ETest {
-    public static final String TASKS_URL = "/api/v1.0/tasks";
-    public static final String TASK_URL = "/api/v1.0/tasks/{id}";
+    private static final String TASKS_URL = "/api/v1.0/tasks";
+    private static final String TASK_URL = "/api/v1.0/tasks/{id}";
     private RestTestClient testClient;
 
     @BeforeAll
