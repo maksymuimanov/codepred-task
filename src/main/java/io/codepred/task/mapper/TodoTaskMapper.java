@@ -5,6 +5,7 @@ import io.codepred.task.dto.TodoTaskResponse;
 import io.codepred.task.entity.TodoTask;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
@@ -15,4 +16,6 @@ public interface TodoTaskMapper {
     TodoTask toTodoTask(TodoTaskRequest todoTaskRequest);
 
     TodoTaskResponse toTodoTaskResponse(TodoTask todoTask);
+
+    void updateTodoTask(TodoTaskRequest todoTaskRequest, @MappingTarget TodoTask todoTask);
 }

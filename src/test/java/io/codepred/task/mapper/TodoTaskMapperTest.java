@@ -49,4 +49,17 @@ class TodoTaskMapperTest {
                 .hasFieldOrPropertyWithValue("status", todoTask.getStatus())
                 .hasFieldOrPropertyWithValue("createdAt", todoTask.getCreatedAt());
     }
+
+    @Test
+    void updateTodoTask_shouldSetFieldsFromTodoTaskRequestToTodoTask() {
+        TodoTask todoTask = new TodoTask(1L, "Title", "Description", TodoStatus.NOT_STARTED, LocalDateTime.now());
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("New Title", "Description", TodoStatus.STARTED);
+
+        todoTaskMapper.updateTodoTask(todoTaskRequest, todoTask);
+
+        assertThat(todoTask)
+                .hasFieldOrPropertyWithValue("title", todoTaskRequest.title())
+                .hasFieldOrPropertyWithValue("description", todoTaskRequest.description())
+                .hasFieldOrPropertyWithValue("status", todoTaskRequest.status());
+    }
 }

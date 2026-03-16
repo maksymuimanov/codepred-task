@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.codepred.task.dto.TodoTaskRequest;
 import io.codepred.task.dto.TodoTaskResponse;
 import io.codepred.task.entity.TodoStatus;
+import io.codepred.task.exception.TodoTaskNotFoundException;
 import io.codepred.task.service.TodoTaskService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -67,8 +68,7 @@ class TodoTaskControllerTest {
 
     @Test
     void postTodoTask_shouldReturnBadRequestStatusAndNotCreateTodoTask_whenInvalidTodoTaskRequest() throws Exception {
-        TodoTaskRequest todoTaskRequest = new TodoTaskRequest(null, null, null);
-        TodoTaskResponse todoTaskResponse = mock(TodoTaskResponse.class);
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("", null, null);
 
         mockMvc.perform(post("/api/v1.0/tasks")
                         .content(objectMapper.writeValueAsString(todoTaskRequest))
@@ -99,7 +99,7 @@ class TodoTaskControllerTest {
     }
 
     @Test
-    void getTodoTask_shouldReturnOkStatusAndTodoTask() throws Exception {
+    void getTodoTask_shouldReturnOkStatusAndGetTodoTask() throws Exception {
         Long id = 1L;
         TodoTaskResponse todoTaskResponse = new TodoTaskResponse(id, "Title", null, TodoStatus.NOT_STARTED, LocalDateTime.now());
 
@@ -119,6 +119,20 @@ class TodoTaskControllerTest {
     }
 
     @Test
+    void getTodoTask_shouldReturnNotFoundStatusAndNotGetTodoTask_whenTodoTaskNotExists() throws Exception {
+        Long id = 1L;
+
+        when(todoTaskService.getTodoTask(id))
+                .thenThrow(TodoTaskNotFoundException.class);
+
+        mockMvc.perform(get("/api/v1.0/tasks/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+        verify(todoTaskService)
+                .getTodoTask(id);
+    }
+
+    @Test
     void putTodoTask_shouldReturnOkStatusAndUpdateTodoTask() throws Exception {
         Long id = 1L;
         TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NOT_STARTED);
@@ -128,8 +142,8 @@ class TodoTaskControllerTest {
                 .thenReturn(todoTaskResponse);
 
         mockMvc.perform(put("/api/v1.0/tasks/{id}", id)
-                .content(objectMapper.writeValueAsString(todoTaskRequest))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .content(objectMapper.writeValueAsString(todoTaskRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(todoTaskResponse.id()))
                 .andExpect(jsonPath("$.title").value(todoTaskResponse.title()))
@@ -141,11 +155,40 @@ class TodoTaskControllerTest {
     }
 
     @Test
+    void putTodoTask_shouldReturnNotFoundAndNotUpdateTodoTask_whenInvalidTodoTaskRequest() throws Exception {
+        Long id = 1L;
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NOT_STARTED);
+
+        when(todoTaskService.updateTodoTask(id, todoTaskRequest))
+                .thenThrow(TodoTaskNotFoundException.class);
+
+        mockMvc.perform(put("/api/v1.0/tasks/{id}", id)
+                        .content(objectMapper.writeValueAsString(todoTaskRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+        verify(todoTaskService)
+                .updateTodoTask(id, todoTaskRequest);
+    }
+
+    @Test
+    void putTodoTask_shouldReturnBadRequestAndNotUpdateTodoTask_whenInvalidTodoTaskRequest() throws Exception {
+        Long id = 1L;
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("", null, null);
+
+        mockMvc.perform(put("/api/v1.0/tasks/{id}", id)
+                        .content(objectMapper.writeValueAsString(todoTaskRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        verify(todoTaskService, never())
+                .updateTodoTask(id, todoTaskRequest);
+    }
+
+    @Test
     void deleteTodoTask_shouldReturnOkStatusAndDeleteTodoTask() throws Exception {
         Long id = 1L;
 
         mockMvc.perform(delete("/api/v1.0/tasks/{id}", id)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         verify(todoTaskService)
                 .deleteTodoTask(id);

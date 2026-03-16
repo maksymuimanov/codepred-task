@@ -129,11 +129,14 @@ class TodoTaskServiceTest {
     void updateTodoTask_shouldConvertRequestAndUpdateTodoTask() {
         Long id = 1L;
         TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NOT_STARTED);
-        TodoTask todoTask = spy(new TodoTask(null, todoTaskRequest.title(), todoTaskRequest.description(), todoTaskRequest.status(), LocalDateTime.now()));
+        TodoTask todoTask = spy(new TodoTask(id, todoTaskRequest.title(), todoTaskRequest.description(), todoTaskRequest.status(), LocalDateTime.now()));
         TodoTaskResponse todoTaskResponse = new TodoTaskResponse(todoTask.getId(), todoTask.getTitle(), todoTask.getDescription(), todoTask.getStatus(), todoTask.getCreatedAt());
 
-        when(todoTaskMapper.toTodoTask(todoTaskRequest))
-                .thenReturn(todoTask);
+        when(todoTaskRepository.findById(id))
+                .thenReturn(Optional.of(todoTask));
+        doNothing()
+                .when(todoTaskMapper)
+                .updateTodoTask(todoTaskRequest, todoTask);
         when(todoTaskRepository.save(todoTask))
                 .thenReturn(todoTask);
         when(todoTaskMapper.toTodoTaskResponse(todoTask))
@@ -144,14 +147,26 @@ class TodoTaskServiceTest {
         assertThat(result)
                 .isNotNull()
                 .isEqualTo(todoTaskResponse);
+        verify(todoTaskRepository)
+                .findById(id);
         verify(todoTaskMapper)
-                .toTodoTask(todoTaskRequest);
-        verify(todoTask)
-                .setId(id);
+                .updateTodoTask(todoTaskRequest, todoTask);
         verify(todoTaskRepository)
                 .save(todoTask);
         verify(todoTaskMapper)
                 .toTodoTaskResponse(todoTask);
+    }
+
+    @Test
+    void updateTodoTask_shouldThrowException_whenTodoTaskNotExists() {
+        Long id = 1L;
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NOT_STARTED);
+
+        when(todoTaskRepository.findById(id))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> todoTaskService.updateTodoTask(id, todoTaskRequest))
+                .isInstanceOf(TodoTaskNotFoundException.class);
     }
 
     @Test

@@ -44,8 +44,9 @@ public class TodoTaskServiceImpl implements TodoTaskService {
     @Override
     @Transactional
     public TodoTaskResponse updateTodoTask(Long id, TodoTaskRequest todoTaskRequest) {
-        TodoTask todoTask = this.todoTaskMapper.toTodoTask(todoTaskRequest);
-        todoTask.setId(id);
+        TodoTask todoTask = this.todoTaskRepository.findById(id)
+                .orElseThrow(TodoTaskNotFoundException::new);
+        this.todoTaskMapper.updateTodoTask(todoTaskRequest, todoTask);
         this.todoTaskRepository.save(todoTask);
         return this.todoTaskMapper.toTodoTaskResponse(todoTask);
     }
