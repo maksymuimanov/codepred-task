@@ -1,5 +1,6 @@
 package io.codepred.task.repository;
 
+import io.codepred.task.TestcontainersConfiguration;
 import io.codepred.task.entity.TodoStatus;
 import io.codepred.task.entity.TodoTask;
 import jakarta.persistence.EntityManager;

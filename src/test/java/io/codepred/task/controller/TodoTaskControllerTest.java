@@ -23,8 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,7 +46,7 @@ class TodoTaskControllerTest {
     }
 
     @Test
-    void postTodoTask_shouldCreateTodoTask() throws Exception {
+    void postTodoTask_shouldReturnOkStatusAndCreateTodoTask() throws Exception {
         TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NOT_STARTED);
         TodoTaskResponse todoTaskResponse = new TodoTaskResponse(1L, todoTaskRequest.title(), todoTaskRequest.description(), todoTaskRequest.status(), LocalDateTime.now());
 
@@ -67,7 +66,20 @@ class TodoTaskControllerTest {
     }
 
     @Test
-    void getTodoTasks_shouldReturnTodoTaskPage() throws Exception {
+    void postTodoTask_shouldReturnBadRequestStatusAndNotCreateTodoTask_whenInvalidTodoTaskRequest() throws Exception {
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest(null, null, null);
+        TodoTaskResponse todoTaskResponse = mock(TodoTaskResponse.class);
+
+        mockMvc.perform(post("/api/v1.0/tasks")
+                        .content(objectMapper.writeValueAsString(todoTaskRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+        verify(todoTaskService, never())
+                .createTodoTask(todoTaskRequest);
+    }
+
+    @Test
+    void getTodoTasks_shouldReturnOkStatusAndTodoTaskPage() throws Exception {
         TodoTaskResponse todoTaskResponse = new TodoTaskResponse(1L, "Title", null, TodoStatus.NOT_STARTED, LocalDateTime.now());
         PageImpl<TodoTaskResponse> todoTaskPage = new PageImpl<>(List.of(todoTaskResponse));
 
@@ -87,7 +99,7 @@ class TodoTaskControllerTest {
     }
 
     @Test
-    void getTodoTask_shouldReturnTodoTask() throws Exception {
+    void getTodoTask_shouldReturnOkStatusAndTodoTask() throws Exception {
         Long id = 1L;
         TodoTaskResponse todoTaskResponse = new TodoTaskResponse(id, "Title", null, TodoStatus.NOT_STARTED, LocalDateTime.now());
 
@@ -107,7 +119,7 @@ class TodoTaskControllerTest {
     }
 
     @Test
-    void putTodoTask_shouldUpdateTodoTask() throws Exception {
+    void putTodoTask_shouldReturnOkStatusAndUpdateTodoTask() throws Exception {
         Long id = 1L;
         TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NOT_STARTED);
         TodoTaskResponse todoTaskResponse = new TodoTaskResponse(id, todoTaskRequest.title(), todoTaskRequest.description(), todoTaskRequest.status(), LocalDateTime.now());
@@ -129,7 +141,7 @@ class TodoTaskControllerTest {
     }
 
     @Test
-    void deleteTodoTask_shouldDeleteTodoTask() throws Exception {
+    void deleteTodoTask_shouldReturnOkStatusAndDeleteTodoTask() throws Exception {
         Long id = 1L;
 
         mockMvc.perform(delete("/api/v1.0/tasks/{id}", id)
