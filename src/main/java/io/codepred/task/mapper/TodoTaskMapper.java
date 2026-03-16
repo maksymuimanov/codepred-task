@@ -45,5 +45,7 @@ public interface TodoTaskMapper {
      * @param todoTaskRequest the request data to apply
      * @param todoTask the entity to update (target)
      */
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     void updateTodoTask(TodoTaskRequest todoTaskRequest, @MappingTarget TodoTask todoTask);
 }
