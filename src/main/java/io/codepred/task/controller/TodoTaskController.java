@@ -17,6 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 /**
  * REST controller for managing tasks.
@@ -44,7 +47,13 @@ public class TodoTaskController {
     @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content(schema = @Schema(implementation = ErrorAttributes.class)))
     public ResponseEntity<TodoTaskResponse> postTodoTask(@RequestBody @Valid TodoTaskRequest todoTaskRequest) {
         TodoTaskResponse todoTaskResponse = this.todoTaskService.createTodoTask(todoTaskRequest);
-        return ResponseEntity.ok(todoTaskResponse);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(todoTaskResponse.id())
+                .toUri();
+        return ResponseEntity.created(location)
+                .body(todoTaskResponse);
     }
 
     /**
@@ -103,6 +112,7 @@ public class TodoTaskController {
     @ApiResponse(responseCode = "200", description = "Todo task deleted successfully")
     public ResponseEntity<Void> deleteTodoTask(@PathVariable Long id) {
         this.todoTaskService.deleteTodoTask(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent()
+                .build();
     }
 }

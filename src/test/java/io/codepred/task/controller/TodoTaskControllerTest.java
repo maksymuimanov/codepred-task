@@ -56,7 +56,7 @@ class TodoTaskControllerTest {
         mockMvc.perform(post("/api/v1.0/tasks")
                         .content(objectMapper.writeValueAsString(todoTaskRequest))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(todoTaskResponse.id()))
                 .andExpect(jsonPath("$.title").value(todoTaskResponse.title()))
                 .andExpect(jsonPath("$.description").value(todoTaskResponse.description()))
@@ -189,7 +189,7 @@ class TodoTaskControllerTest {
 
         mockMvc.perform(delete("/api/v1.0/tasks/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
         verify(todoTaskService)
                 .deleteTodoTask(id);
     }

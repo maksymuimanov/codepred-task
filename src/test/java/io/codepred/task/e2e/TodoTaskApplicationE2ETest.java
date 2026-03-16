@@ -55,7 +55,7 @@ class TodoTaskApplicationE2ETest {
                 .body(todoTaskRequest)
                 .exchange()
                 .expectStatus()
-                .isOk()
+                .isCreated()
                 .expectBody()
                 .jsonPath("$.id")
                 .isNotEmpty()
@@ -182,6 +182,6 @@ class TodoTaskApplicationE2ETest {
                 .uri(TASK_URL, 3)
                 .exchange()
                 .expectStatus()
-                .isOk();
+                .isNoContent();
     }
 }
