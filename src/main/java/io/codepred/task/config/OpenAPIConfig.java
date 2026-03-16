@@ -6,8 +6,19 @@ import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration for OpenAPI documentation.
+ * <p>
+ * Configures the API documentation for the Tasks management endpoints,
+ * including API metadata and server information.
+ */
 @Configuration
 public class OpenAPIConfig {
+    /**
+     * Creates and configures the OpenAPI specification.
+     *
+     * @return configured OpenAPI instance with API info and server details
+     */
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()

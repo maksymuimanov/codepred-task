@@ -11,6 +11,13 @@ import org.jspecify.annotations.Nullable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * JPA entity representing a task.
+ * <p>
+ * Persists task information in the database with fields for
+ * title, description, status, and creation timestamp.
+ * Uses identity generation for the primary key.
+ */
 @Entity
 @Table(name = "todo_tasks")
 @Getter @Setter
@@ -30,6 +37,14 @@ public class TodoTask {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    /**
+     * Creates a new task without an ID.
+     *
+     * @param title the task title
+     * @param description optional task description
+     * @param status the current task status
+     * @param createdAt the creation timestamp
+     */
     public TodoTask(String title,
                     @Nullable String description,
                     TodoStatus status,
@@ -37,6 +52,9 @@ public class TodoTask {
         this(null, title, description, status, createdAt);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final boolean equals(Object object) {
         if (this == object) return true;
@@ -48,6 +66,9 @@ public class TodoTask {
         return this.getId() != null && Objects.equals(this.getId(), todoTask.getId());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy hibernateProxy ? hibernateProxy.getHibernateLazyInitializer().getPersistentClass().hashCode() : this.getClass().hashCode();

@@ -6,6 +6,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.jspecify.annotations.Nullable;
 
+/**
+ * Data transfer object for creating and updating tasks.
+ * <p>
+ * Represents the request payload for task creation and update operations.
+ * Contains the task title, optional description, and current status.
+ */
 public record TodoTaskRequest(
         @Schema(description = "Title of the task", example = "Task title")
         @NotBlank

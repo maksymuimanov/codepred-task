@@ -6,6 +6,12 @@ import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDateTime;
 
+/**
+ * Data transfer object for task responses.
+ * <p>
+ * Represents the response payload for task retrieval operations.
+ * Contains the complete task information, including the generated ID and creation timestamp.
+ */
 public record TodoTaskResponse(
         @Schema(description = "Unique identifier of the task", example = "1")
         Long id,

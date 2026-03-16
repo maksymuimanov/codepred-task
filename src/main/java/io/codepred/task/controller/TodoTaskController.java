@@ -18,6 +18,13 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * REST controller for managing tasks.
+ * <p>
+ * Exposes CRUD operations for tasks through REST API endpoints.
+ * Handles HTTP requests, delegates business logic to services,
+ * and returns JSON responses to API clients.
+ */
 @RestController
 @RequestMapping(path = "/api/{version}/tasks", version = "1.0")
 @Tag(name = "Todo Tasks", description = "Todo tasks management")
@@ -25,6 +32,12 @@ import org.springframework.web.bind.annotation.*;
 public class TodoTaskController {
     private final TodoTaskService todoTaskService;
 
+    /**
+     * Creates a new task.
+     *
+     * @param todoTaskRequest the task data to create
+     * @return the created task response
+     */
     @PostMapping
     @Operation(summary = "Create a new todo task", description = "Creates and saves a new todo task to the database")
     @ApiResponse(responseCode = "200", description = "Todo task created successfully")
@@ -34,6 +47,12 @@ public class TodoTaskController {
         return ResponseEntity.ok(todoTaskResponse);
     }
 
+    /**
+     * Retrieves all tasks with pagination.
+     *
+     * @param pageable pagination and sorting parameters
+     * @return paginated list of tasks
+     */
     @GetMapping
     @Operation(summary = "Get todo tasks", description = "Retrieves a page of all todo tasks")
     @ApiResponse(responseCode = "200", description = "List of todo tasks retrieved successfully")
@@ -42,6 +61,12 @@ public class TodoTaskController {
         return new PagedModel<>(todoTaskResponses);
     }
 
+    /**
+     * Retrieves a task by its identifier.
+     *
+     * @param id the unique identifier of the task
+     * @return the task matching the provided id
+     */
     @GetMapping("/{id}")
     @Operation(summary = "Get todo task by id", description = "Retrieves a todo task by its unique identifier")
     @ApiResponse(responseCode = "200", description = "Todo task retrieved successfully")
@@ -51,6 +76,13 @@ public class TodoTaskController {
         return ResponseEntity.ok(todoTaskResponse);
     }
 
+    /**
+     * Updates an existing task.
+     *
+     * @param id the unique identifier of the task to update
+     * @param todoTaskRequest the updated task data
+     * @return the updated task response
+     */
     @PutMapping("/{id}")
     @Operation(summary = "Update todo task by id", description = "Updates a todo task by its unique identifier")
     @ApiResponse(responseCode = "200", description = "Todo task updated successfully")
@@ -60,6 +92,12 @@ public class TodoTaskController {
         return ResponseEntity.ok(todoTaskResponse);
     }
 
+    /**
+     * Deletes a task by its identifier.
+     *
+     * @param id the unique identifier of the task to delete
+     * @return empty response indicating successful deletion
+     */
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete todo task by id", description = "Deletes a todo task by its unique identifier")
     @ApiResponse(responseCode = "200", description = "Todo task deleted successfully")

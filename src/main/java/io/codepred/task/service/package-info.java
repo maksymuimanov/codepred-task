@@ -1,3 +1,6 @@
+/**
+ * Business logic services for task management.
+ */
 @NullMarked
 package io.codepred.task.service;
 

@@ -11,8 +11,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Global exception handler for the web layer.
+ * <p>
+ * Provides centralized exception handling across all @RequestMapping methods.
+ * Converts specific exceptions into appropriate HTTP responses with error details.
+ */
 @RestControllerAdvice
 public class WebExceptionHandler {
+    /**
+     * Handles validation exceptions for request bodies.
+     *
+     * @param exception the validation exception containing binding errors
+     * @return a map of field names to error messages with a 400 Bad Request status
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Map<String, @Nullable String>> handleValidationException(MethodArgumentNotValidException exception) {
