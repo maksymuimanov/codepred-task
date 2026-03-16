@@ -22,7 +22,7 @@ class TodoTaskMapperTest {
 
     @Test
     void toTodoTask_shouldConvertTodoTaskRequestToTodoTask() {
-        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NOT_STARTED);
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NEW);
 
         TodoTask todoTask = todoTaskMapper.toTodoTask(todoTaskRequest);
 
@@ -38,7 +38,7 @@ class TodoTaskMapperTest {
 
     @Test
     void toTodoTaskResponse_shouldConvertTodoTaskToTodoTaskResponse() {
-        TodoTask todoTask = new TodoTask(1L, "Title", "Description", TodoStatus.NOT_STARTED, LocalDateTime.now());
+        TodoTask todoTask = new TodoTask(1L, "Title", "Description", TodoStatus.NEW, LocalDateTime.now());
 
         TodoTaskResponse todoTaskResponse = todoTaskMapper.toTodoTaskResponse(todoTask);
 
@@ -52,8 +52,8 @@ class TodoTaskMapperTest {
 
     @Test
     void updateTodoTask_shouldSetFieldsFromTodoTaskRequestToTodoTask() {
-        TodoTask todoTask = new TodoTask(1L, "Title", "Description", TodoStatus.NOT_STARTED, LocalDateTime.now());
-        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("New Title", "Description", TodoStatus.STARTED);
+        TodoTask todoTask = new TodoTask(1L, "Title", "Description", TodoStatus.NEW, LocalDateTime.now());
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("New Title", "Description", TodoStatus.IN_PROGRESS);
 
         todoTaskMapper.updateTodoTask(todoTaskRequest, todoTask);
 

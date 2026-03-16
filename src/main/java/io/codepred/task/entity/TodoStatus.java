@@ -7,8 +7,7 @@ package io.codepred.task.entity;
  * from creation to completion.
  */
 public enum TodoStatus {
-    NOT_STARTED,
-    STARTED,
+    NEW,
     IN_PROGRESS,
-    FINISHED
+    DONE
 }

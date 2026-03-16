@@ -35,7 +35,7 @@ class TodoTaskServiceTest {
 
     @Test
     void createTodoTask_shouldConvertRequestAndSaveToDatabase() {
-        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NOT_STARTED);
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NEW);
         TodoTask todoTask = new TodoTask(null, todoTaskRequest.title(), todoTaskRequest.description(), todoTaskRequest.status(), LocalDateTime.now());
         TodoTaskResponse todoTaskResponse = new TodoTaskResponse(todoTask.getId(), todoTask.getTitle(), todoTask.getDescription(), todoTask.getStatus(), todoTask.getCreatedAt());
 
@@ -65,7 +65,7 @@ class TodoTaskServiceTest {
     @Test
     void getTodoTasks_shouldReturnTodoTaskPage() {
         Long id = 1L;
-        TodoTask todoTask = new TodoTask(id, "Title", null, TodoStatus.NOT_STARTED, LocalDateTime.now());
+        TodoTask todoTask = new TodoTask(id, "Title", null, TodoStatus.NEW, LocalDateTime.now());
         TodoTaskResponse todoTaskResponse = new TodoTaskResponse(todoTask.getId(), todoTask.getTitle(), todoTask.getDescription(), todoTask.getStatus(), todoTask.getCreatedAt());
         Page<TodoTask> todoTaskPage = new PageImpl<>(List.of(todoTask));
         Pageable pageable = mock(Pageable.class);
@@ -90,7 +90,7 @@ class TodoTaskServiceTest {
     @Test
     void getTodoTask_shouldReturnTodoTask_whenTodoTaskExists() {
         Long id = 1L;
-        TodoTask todoTask = new TodoTask(id, "Title", null, TodoStatus.NOT_STARTED, LocalDateTime.now());
+        TodoTask todoTask = new TodoTask(id, "Title", null, TodoStatus.NEW, LocalDateTime.now());
         TodoTaskResponse todoTaskResponse = new TodoTaskResponse(todoTask.getId(), todoTask.getTitle(), todoTask.getDescription(), todoTask.getStatus(), todoTask.getCreatedAt());
 
         when(todoTaskRepository.findById(id))
@@ -128,7 +128,7 @@ class TodoTaskServiceTest {
     @Test
     void updateTodoTask_shouldConvertRequestAndUpdateTodoTask() {
         Long id = 1L;
-        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NOT_STARTED);
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NEW);
         TodoTask todoTask = spy(new TodoTask(id, todoTaskRequest.title(), todoTaskRequest.description(), todoTaskRequest.status(), LocalDateTime.now()));
         TodoTaskResponse todoTaskResponse = new TodoTaskResponse(todoTask.getId(), todoTask.getTitle(), todoTask.getDescription(), todoTask.getStatus(), todoTask.getCreatedAt());
 
@@ -160,7 +160,7 @@ class TodoTaskServiceTest {
     @Test
     void updateTodoTask_shouldThrowException_whenTodoTaskNotExists() {
         Long id = 1L;
-        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NOT_STARTED);
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NEW);
 
         when(todoTaskRepository.findById(id))
                 .thenReturn(Optional.empty());

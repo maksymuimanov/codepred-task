@@ -48,7 +48,7 @@ class TodoTaskControllerTest {
 
     @Test
     void postTodoTask_shouldReturnOkStatusAndCreateTodoTask() throws Exception {
-        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NOT_STARTED);
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NEW);
         TodoTaskResponse todoTaskResponse = new TodoTaskResponse(1L, todoTaskRequest.title(), todoTaskRequest.description(), todoTaskRequest.status(), LocalDateTime.now());
 
         when(todoTaskService.createTodoTask(todoTaskRequest))
@@ -80,7 +80,7 @@ class TodoTaskControllerTest {
 
     @Test
     void getTodoTasks_shouldReturnOkStatusAndTodoTaskPage() throws Exception {
-        TodoTaskResponse todoTaskResponse = new TodoTaskResponse(1L, "Title", null, TodoStatus.NOT_STARTED, LocalDateTime.now());
+        TodoTaskResponse todoTaskResponse = new TodoTaskResponse(1L, "Title", null, TodoStatus.NEW, LocalDateTime.now());
         PageImpl<TodoTaskResponse> todoTaskPage = new PageImpl<>(List.of(todoTaskResponse));
 
         when(todoTaskService.getTodoTasks(any()))
@@ -101,7 +101,7 @@ class TodoTaskControllerTest {
     @Test
     void getTodoTask_shouldReturnOkStatusAndGetTodoTask() throws Exception {
         Long id = 1L;
-        TodoTaskResponse todoTaskResponse = new TodoTaskResponse(id, "Title", null, TodoStatus.NOT_STARTED, LocalDateTime.now());
+        TodoTaskResponse todoTaskResponse = new TodoTaskResponse(id, "Title", null, TodoStatus.NEW, LocalDateTime.now());
 
         when(todoTaskService.getTodoTask(id))
                 .thenReturn(todoTaskResponse);
@@ -135,7 +135,7 @@ class TodoTaskControllerTest {
     @Test
     void putTodoTask_shouldReturnOkStatusAndUpdateTodoTask() throws Exception {
         Long id = 1L;
-        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NOT_STARTED);
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NEW);
         TodoTaskResponse todoTaskResponse = new TodoTaskResponse(id, todoTaskRequest.title(), todoTaskRequest.description(), todoTaskRequest.status(), LocalDateTime.now());
 
         when(todoTaskService.updateTodoTask(id, todoTaskRequest))
@@ -157,7 +157,7 @@ class TodoTaskControllerTest {
     @Test
     void putTodoTask_shouldReturnNotFoundAndNotUpdateTodoTask_whenInvalidTodoTaskRequest() throws Exception {
         Long id = 1L;
-        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NOT_STARTED);
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NEW);
 
         when(todoTaskService.updateTodoTask(id, todoTaskRequest))
                 .thenThrow(TodoTaskNotFoundException.class);

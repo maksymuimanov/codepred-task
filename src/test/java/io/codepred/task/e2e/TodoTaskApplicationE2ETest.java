@@ -25,18 +25,13 @@ class TodoTaskApplicationE2ETest {
     @BeforeAll
     void beforeAll(WebApplicationContext webApplicationContext) {
         testClient = RestTestClient.bindToApplicationContext(webApplicationContext).build();
-        TodoTaskRequest todoTaskRequest1 = new TodoTaskRequest("Title 1", "Description 1", TodoStatus.NOT_STARTED);
-        TodoTaskRequest todoTaskRequest2 = new TodoTaskRequest("Title 2", "Description 2", TodoStatus.STARTED);
-        TodoTaskRequest todoTaskRequest3 = new TodoTaskRequest("Title 3", "Description 3", TodoStatus.IN_PROGRESS);
+        TodoTaskRequest todoTaskRequest1 = new TodoTaskRequest("Title 1", "Description 1", TodoStatus.NEW);
+        TodoTaskRequest todoTaskRequest2 = new TodoTaskRequest("Title 2", "Description 2", TodoStatus.IN_PROGRESS);
+        TodoTaskRequest todoTaskRequest3 = new TodoTaskRequest("Title 3", "Description 3", TodoStatus.DONE);
         testClient.post()
                 .uri(TASKS_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(todoTaskRequest1)
-                .exchange();
-        testClient.post()
-                .uri(TASKS_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(todoTaskRequest2)
                 .exchange();
         testClient.post()
                 .uri(TASKS_URL)
@@ -52,7 +47,7 @@ class TodoTaskApplicationE2ETest {
 
     @Test
     void postTodoTask_shouldReturnOkStatusAndCreateTodoTask() {
-        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NOT_STARTED);
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("Title", null, TodoStatus.NEW);
 
         testClient.post()
                 .uri(TASKS_URL)
@@ -116,7 +111,7 @@ class TodoTaskApplicationE2ETest {
                 .jsonPath("$.description")
                 .isEqualTo("Description 1")
                 .jsonPath("$.status")
-                .isEqualTo(TodoStatus.NOT_STARTED.name())
+                .isEqualTo(TodoStatus.NEW.name())
                 .jsonPath("$.createdAt")
                 .isNotEmpty();
     }
@@ -133,7 +128,7 @@ class TodoTaskApplicationE2ETest {
 
     @Test
     void putTodoTask_shouldReturnOkStatusAndUpdateTodoTask() {
-        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("New Title", "New Description", TodoStatus.FINISHED);
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("New Title", "New Description", TodoStatus.DONE);
 
         testClient.put()
                 .uri(TASK_URL, 2)
@@ -157,7 +152,7 @@ class TodoTaskApplicationE2ETest {
 
     @Test
     void putTodoTask_shouldReturnNotFoundAndNotUpdateTodoTask_whenInvalidTodoTaskRequest() {
-        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("New Title", "New Description", TodoStatus.FINISHED);
+        TodoTaskRequest todoTaskRequest = new TodoTaskRequest("New Title", "New Description", TodoStatus.DONE);
 
         testClient.put()
                 .uri(TASK_URL, -1)

@@ -29,7 +29,7 @@ class TodoTaskRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        todoTask = new TodoTask("Title", null, TodoStatus.NOT_STARTED, LocalDateTime.now());
+        todoTask = new TodoTask("Title", null, TodoStatus.NEW, LocalDateTime.now());
     }
 
     @Test
@@ -46,7 +46,7 @@ class TodoTaskRepositoryTest {
     @Test
     void save_shouldUpdateTodoTask_whenTodoTaskExists() {
         todoTaskRepository.save(todoTask);
-        TodoTask updatedTodoTask = new TodoTask(todoTask.getId(), "New Title", "Description", TodoStatus.STARTED, LocalDateTime.now());
+        TodoTask updatedTodoTask = new TodoTask(todoTask.getId(), "New Title", "Description", TodoStatus.IN_PROGRESS, LocalDateTime.now());
         todoTaskRepository.save(updatedTodoTask);
 
         Long id = updatedTodoTask.getId();
