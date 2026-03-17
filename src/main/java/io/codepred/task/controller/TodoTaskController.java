@@ -43,7 +43,7 @@ public class TodoTaskController {
      */
     @PostMapping
     @Operation(summary = "Create a new todo task", description = "Creates and saves a new todo task to the database")
-    @ApiResponse(responseCode = "200", description = "Todo task created successfully")
+    @ApiResponse(responseCode = "201", description = "Todo task created successfully")
     @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content(schema = @Schema(implementation = ErrorAttributes.class)))
     public ResponseEntity<TodoTaskResponse> postTodoTask(@RequestBody @Valid TodoTaskRequest todoTaskRequest) {
         TodoTaskResponse todoTaskResponse = this.todoTaskService.createTodoTask(todoTaskRequest);
@@ -96,6 +96,7 @@ public class TodoTaskController {
     @Operation(summary = "Update todo task by id", description = "Updates a todo task by its unique identifier")
     @ApiResponse(responseCode = "200", description = "Todo task updated successfully")
     @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content(schema = @Schema(implementation = ErrorAttributes.class)))
+    @ApiResponse(responseCode = "404", description = "Todo task not found", content = @Content(schema = @Schema(implementation = ErrorAttributes.class)))
     public ResponseEntity<TodoTaskResponse> putTodoTask(@PathVariable Long id, @RequestBody @Valid TodoTaskRequest todoTaskRequest) {
         TodoTaskResponse todoTaskResponse = this.todoTaskService.updateTodoTask(id, todoTaskRequest);
         return ResponseEntity.ok(todoTaskResponse);
@@ -109,7 +110,7 @@ public class TodoTaskController {
      */
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete todo task by id", description = "Deletes a todo task by its unique identifier")
-    @ApiResponse(responseCode = "200", description = "Todo task deleted successfully")
+    @ApiResponse(responseCode = "204", description = "Todo task deleted successfully")
     public ResponseEntity<Void> deleteTodoTask(@PathVariable Long id) {
         this.todoTaskService.deleteTodoTask(id);
         return ResponseEntity.noContent()
