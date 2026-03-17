@@ -19,7 +19,7 @@ public record TodoTaskRequest(
         @Schema(description = "Description of the task", example = "Task description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
         @Nullable
         String description,
-        @Schema(description = "Status of the task", example = "NOT_STARTED")
+        @Schema(description = "Status of the task", example = "NEW")
         @NotNull
         TodoStatus status
 ) {

@@ -20,7 +20,7 @@ public record TodoTaskResponse(
         @Schema(description = "Description of the task", example = "Task description", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
         @Nullable
         String description,
-        @Schema(description = "Status of the task", example = "NOT_STARTED")
+        @Schema(description = "Status of the task", example = "NEW")
         TodoStatus status,
         @Schema(description = "Creation date and time of the task", example = "2026-03-15T00:00:00")
         LocalDateTime createdAt
